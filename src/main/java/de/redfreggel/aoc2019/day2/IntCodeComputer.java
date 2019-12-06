@@ -71,7 +71,7 @@ public class IntCodeComputer {
     }
 
     private Map<Integer, Integer> createMap(int[] pInput) {
-        Map<Integer, Integer> intCode = new HashMap<Integer, Integer>();
+        Map<Integer, Integer> intCode = new HashMap<>();
         for (int i = 0; i < pInput.length; i++) {
             intCode.put(i, pInput[i]);
         }
@@ -82,7 +82,7 @@ public class IntCodeComputer {
         for (int i = 0; i < pResult.size(); i++) {
             System.out.print(pResult.get(i) + separator);
         }
-        System.out.println("");
+        System.out.println();
     }
 
     private Map<Integer, Integer> calculateIntPos(Map<Integer, Integer> pParam) {
