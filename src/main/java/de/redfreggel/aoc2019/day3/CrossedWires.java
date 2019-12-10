@@ -1,6 +1,5 @@
 package de.redfreggel.aoc2019.day3;
 
-import java.awt.desktop.SystemSleepEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -119,7 +118,7 @@ public class CrossedWires {
     }
 
     private List<Point> matches(Map<String, Point> path1, Map<String, Point> path2) {
-        List<Point> crossedPoints = new ArrayList<>();
+        List<Point> crossedPoints = new ArrayList<Point>();
         for (String keyPath1 : path1.keySet()) {
             if (path2.containsKey(keyPath1)) {
                 //CrossedPath
@@ -153,7 +152,7 @@ public class CrossedWires {
     }
 
     private Map<String, Point> walkPath(String pPath) {
-        Map<String, Point> walkedPath = new HashMap<>();
+        Map<String, Point> walkedPath = new HashMap<String, Point>();
         Point whereWeAre = new Point(0, 0, "00", 0);
 
         //  StringBuffer buffer = new StringBuffer();
