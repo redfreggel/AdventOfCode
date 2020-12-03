@@ -40,10 +40,11 @@ public class SlopeDriver {
 
             do{
                 fileText = reader.readLine();
-                StringBuilder treeLine;
+                StringBuilder treeLine = new StringBuilder();
                 if(slopeDown== 0){
                     fileText = reader.readLine();
                 }
+
                 slopeDown++;
                 for(SloppySlope slope : sloppySlopes){
                     slope.moveDownByOne();
@@ -52,7 +53,9 @@ public class SlopeDriver {
                     }
                     slope.moveRight();
                     if(fileText != null) {//not at the end
-                        treeLine = new StringBuilder(fileText);
+                        if(treeLine.length()==0){
+                            treeLine.append(fileText);
+                        }
                         while( treeLine.length() < slope.getBufferedRightPosition()){
                             treeLine.append(fileText);
                         }
