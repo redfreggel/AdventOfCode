@@ -10,13 +10,13 @@ import java.util.List;
 
 public class TyrannyRocket {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         TyrannyRocket rocket = new TyrannyRocket();
-        List<Integer> list = new ArrayList<Integer>();
-        Path path = Paths.get(".\\src\\main\\resources\\inputDay1_1.txt");
+        List<Integer> list = new ArrayList<>();
+        Path path = Paths.get(".\\src\\main\\resources\\aoc2019\\inputDay1_1.txt");
 
         try (BufferedReader reader = Files.newBufferedReader(path)) {
-            String text = null;
+            String text;
 
             while ((text = reader.readLine()) != null) {
                 list.add(Integer.parseInt(text));

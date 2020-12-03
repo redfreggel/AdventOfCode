@@ -13,7 +13,7 @@ public class PasswordCracker {
     public static final char delimiterChar = ' ';
 
     public static void main(String[] args){
-        Path path = Paths.get(".\\src\\main\\resources\\inputDay2_2020_task_1.txt");
+        Path path = Paths.get(".\\src\\main\\resources\\aoc2020\\inputDay2_2020_task_1.txt");
         List<PasswordChecker> passwordsToCheck = new ArrayList<>();
 
         try (BufferedReader reader = Files.newBufferedReader(path)) {

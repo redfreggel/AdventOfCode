@@ -13,7 +13,7 @@ public class ExpenseSumMultiplier {
 
     public static void main (String[] args) {
         List<Integer> list = new ArrayList<>();
-        Path path = Paths.get(".\\src\\main\\resources\\inputDay1_2020_task_1.txt");
+        Path path = Paths.get(".\\src\\main\\resources\\aoc2020\\inputDay1_2020_task_1.txt");
 
         try (BufferedReader reader = Files.newBufferedReader(path)) {
             String text;
