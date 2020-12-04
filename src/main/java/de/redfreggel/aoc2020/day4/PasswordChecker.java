@@ -40,9 +40,6 @@ optional: cid
     // *
     // * cid (Country ID) - ignored, missing or not.
 
-    //public static final String[] colorECLs = new String[]{"amb", "blu", "brn", "gry", "grn", "hzl", "oth"};
-    //public static final String[] mandatoryFields = new String[]{"byr:", "iyr:", "eyr:", "hgt:", "hcl:", "ecl:", "pid:"};
-
     public static void main(String[] args) {
         Path path = Paths.get(".\\src\\main\\resources\\aoc2020\\inputDay4_2020.txt");
         Pattern pattern = Pattern.compile("(?=.*byr)(?=.*iyr)(?=.*eyr)(?=.*hgt)(?=.*hcl)(?=.*ecl)(?=.*pid)");
@@ -80,7 +77,6 @@ optional: cid
                                         break;
                                     }
                                     year = Integer.parseInt(valuePair[1]);
-                                    // System.out.println("byr match? -> four digits; at least 1920 and at most 2002. value: " + year + " matches? " + (year >= 1920 && year <= 2002));
                                     if (!(year >= 1920 && year <= 2002)) {
                                         pwValid = false;
                                     }
@@ -93,7 +89,6 @@ optional: cid
                                         break;
                                     }
                                     year = Integer.parseInt(valuePair[1]);
-                                    //      System.out.println("iyr match? -> four digits; at least 2010 and at most 2020. value: "+year+ " matches? "+(year >= 2010 && year <= 2020));
                                     if (!(year >= 2010 && year <= 2020)) {
                                         pwValid = false;
                                     }
@@ -105,14 +100,12 @@ optional: cid
                                         break;
                                     }
                                     year = Integer.parseInt(valuePair[1]);
-                                    //     System.out.println("eur match? -> four digits; at least 2020 and at most 2030. value: "+year+ " matches? "+(year >= 2020 && year <= 2030));
                                     if (!(year >= 2020 && year <= 2030)) {
                                         pwValid = false;
                                     }
                                     break;
                                 case "hcl":
                                     //hcl (Hair Color) - a # followed by exactly six characters 0-9 or a-f.
-                                    //System.out.println("hcl match? -> # followed by exactly six characters 0-9 or a-f value: " + colors[1] + " matches? " + patternHCL.matcher(colors[1]).find());
                                     String colorCode = valuePair[1];
                                     if(colorCode.charAt(0)!='#'){
                                         pwValid = false;
@@ -123,31 +116,27 @@ optional: cid
                                         pwValid = false;
                                         break;
                                     }
-                                    // System.out.println(valuePair[1]);
                                     if (!patternHCL.matcher(valuePair[1]).find()) {
                                         pwValid = false;
                                     }
                                     break;
                                 case "ecl":
                                     //ecl (Eye Color) - exactly one of: amb blu brn gry grn hzl oth.
-                                    // System.out.println("ecl match? -> length = 3 value: "+colors[1]+ " matches? "+ (colors[1].length() == 3));
+
 
                                     if (valuePair[1].length() != 3) {
                                         pwValid = false;
                                         break;
                                     }
-                                    //System.out.println(valuePair[1]);
                                     if (!patternELCs.matcher(valuePair[1]).find()) {
                                         pwValid = false;
                                     }
                                     break;
                                 case "pid":
-                                    //   System.out.println("ecl match? -> length = 9 value: "+colors[1]+ " matches? "+ (colors[1].length() == 9));
                                     if (valuePair[1].length() != 9) {
                                         pwValid = false;
                                         break;
                                     }
-                                    //    System.out.println("pid match? ->  a nine-digit number, including leading zeroes value: " + colors[1] + " matches? " + patternID.matcher(colors[1]).find());
                                     if (!patternID.matcher(valuePair[1]).find()) {
                                         pwValid = false;
                                     }
@@ -165,16 +154,14 @@ optional: cid
 
                                     break;
                                 default:
-                                    //  System.out.println("I should not be here "+valuePair[0]);
+
                             }
                         }
                         if (pwValid) {
-                            System.out.println(buf.toString());
                             validPWs++;
                         }
                     }
                     buf = new StringBuffer();
-                    //     System.out.println("---------------------------------------------------------------------");
                 } else {
                     buf.append(text).append(" ");
                 }
