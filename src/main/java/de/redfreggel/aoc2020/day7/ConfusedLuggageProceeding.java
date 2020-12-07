@@ -121,7 +121,7 @@ public class ConfusedLuggageProceeding {
 
             long subCall = getAmountLuggage(luggageNeeded.getColorNeeded(), luggageVisited, riddleInput);
             long subResult = luggageNeeded.getCountNeeded() + (luggageNeeded.getCountNeeded() * subCall);
-            System.out.println("visiting " + luggageNeeded.getColorNeeded() + " count needed: " + luggageNeeded.getCountNeeded() + " multiplying with " + subCall + " results in: " + subResult);
+          //  System.out.println("visiting " + luggageNeeded.getColorNeeded() + " count needed: " + luggageNeeded.getCountNeeded() + " multiplying with " + subCall + " results in: " + subResult);
             luggageVisited.put(luggageNeeded.getColorNeeded().trim(), subCall);
             result = result + subResult;
         }
@@ -130,9 +130,7 @@ public class ConfusedLuggageProceeding {
     }
 
     public long getAmountLuggage(String pActualLuggage, Map<String, Long> pLuggageVisited, Map<String, List<LuggageNeeded>> pRiddleInput) {
-        
         List<LuggageNeeded> connectedBags = pRiddleInput.get(pActualLuggage);
-        
 
         if (connectedBags.size() == 0) {
             pLuggageVisited.put(pActualLuggage.trim(), (long)0);
@@ -153,7 +151,6 @@ public class ConfusedLuggageProceeding {
             //calculate the fun
             resultOutput =resultOutput+ luggageToCheck.getCountNeeded() + (luggageToCheck.getCountNeeded() * subResult);
         }
-       
 
         return resultOutput;
     }
