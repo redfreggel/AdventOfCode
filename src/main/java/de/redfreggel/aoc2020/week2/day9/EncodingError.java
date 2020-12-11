@@ -1,4 +1,4 @@
-package de.redfreggel.aoc2020.day9;
+package de.redfreggel.aoc2020.week2.day9;
 
 import java.io.BufferedReader;
 import java.math.BigDecimal;

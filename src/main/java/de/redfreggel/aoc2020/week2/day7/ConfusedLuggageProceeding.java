@@ -1,4 +1,4 @@
-package de.redfreggel.aoc2020.day7;
+package de.redfreggel.aoc2020.week2.day7;
 
 import java.io.BufferedReader;
 import java.io.IOException;

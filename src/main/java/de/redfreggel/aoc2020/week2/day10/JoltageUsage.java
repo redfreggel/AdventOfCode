@@ -1,4 +1,4 @@
-package de.redfreggel.aoc2020.day10;
+package de.redfreggel.aoc2020.week2.day10;
 
 import java.io.BufferedReader;
 import java.nio.file.Files;

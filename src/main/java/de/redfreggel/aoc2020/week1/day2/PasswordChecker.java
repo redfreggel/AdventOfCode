@@ -1,4 +1,4 @@
-package de.redfreggel.aoc2020.day2;
+package de.redfreggel.aoc2020.week1.day2;
 
 public class PasswordChecker {
     private final String password;
