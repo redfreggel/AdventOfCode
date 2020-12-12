@@ -9,14 +9,15 @@ import java.util.Arrays;
 import java.util.List;
 
 public class SeatingChaosResolver {
-  //  public static final char floor = '.';
+    //  public static final char floor = '.';
     public static final char emptySeat = 'L';
     public static final char occupiedSeat = '#';
 
     public static void main(String[] args) {
         Path path = Paths.get(".\\src\\main\\resources\\aoc2020\\inputDay11_2020.txt");
         String text;
-        char[][] riddleInput = null;
+        char[][] riddleInput1 = null;
+        char[][] riddleInput2 = null;
 
         //Read the input
         List<String> input = new ArrayList<>();
@@ -34,73 +35,56 @@ public class SeatingChaosResolver {
         for (int i = 0; i < input.size(); i++) {
             String inputText = input.get(i);
             if (i == 0 && inputText.length() > 0) {
-                riddleInput = new char[input.size()][inputText.length()];
+                riddleInput1 = new char[input.size()][inputText.length()];
+                riddleInput2 = new char[input.size()][inputText.length()];
             }
             for (int j = 0; j < inputText.length(); j++) {
-                riddleInput[i][j] = inputText.charAt(j);
+                riddleInput1[i][j] = inputText.charAt(j);
+                riddleInput2[i][j] = inputText.charAt(j);
             }
         }
-        /*
-        If a seat is empty (L) and there are no occupied seats adjacent to it, the seat becomes occupied.
 
-        If a seat is occupied (#) and four or more seats adjacent to it are also occupied, the seat becomes empty.
+        solveRiddleOne(riddleInput1);
+        solveRiddleTwo(riddleInput2);
+    }
 
-        Otherwise, the seat's state does not change.
-        Floor (.) never changes; seats don't move, and nobody sits on the floor.
 
-        adjacent = one of the eight positions immediately up, down, left, right, or diagonal from the seat
-         */
-
+    private static void solveRiddleTwo(char[][] riddleInput) {
+        System.out.println(" Entering riddle 2");
         boolean seatChanged;
-
-        //int loop =0;
         do {
-            //System.out.println("loop position: "+loop );
-            seatChanged=false;
+            seatChanged = false;
             char[][] newInput = new char[riddleInput.length][riddleInput[1].length];
+
+
 
             for (int i = 0; i < riddleInput.length; i++) {
                 for (int j = 0; j < riddleInput[i].length; j++) {
                     char currentSeat = riddleInput[i][j];
-                    int adjacentOccupied = countAdjacentOccupations(i, j, riddleInput);
+                    /*
+                   Also, people seem to be more tolerant than you expected:
+                   - it now takes five or more visible occupied seats for an occupied seat to become empty (rather than four or more from the previous rules).
+                   - The other rules still apply: empty seats that see no occupied seats become occupied, seats matching no rule don't change, and floor never changes.
+                     */
+                    int adjacentOccupied = countAdjacentOccupationsRiddle2(i, j, riddleInput, riddleInput.length, riddleInput[1].length);
 
-                  //  if(currentSeat == floor){
-                  //      newInput[i][j]= floor;
-                  //      continue;
-                  //  }
-                    if(currentSeat == emptySeat && adjacentOccupied==0){
+                    if (currentSeat == emptySeat && adjacentOccupied == 0) {
                         newInput[i][j] = occupiedSeat;
-                      //  seatChanged = true;
-                    }
-                    else if(currentSeat == occupiedSeat && adjacentOccupied>=4){
-                        newInput[i][j] = emptySeat;
-                    //    seatChanged = true;
+                    } else if (currentSeat == occupiedSeat && adjacentOccupied >= 5) {
 
-                    }else{
+                        newInput[i][j] = emptySeat;
+                    } else {
                         newInput[i][j] = riddleInput[i][j];
                     }
                 }
 
             }
 
-            for(int i =0; i<riddleInput.length; i++){
-                seatChanged = seatChanged || Arrays.compare(riddleInput[i],newInput[i])!=0;
-            }
-/*
-            System.out.println("origin");
-            for (char[] chars : riddleInput) {
-                System.out.println(Arrays.toString(chars));
-            }
-            System.out.println("modified");
-            for (char[] chars : newInput) {
-                System.out.println(Arrays.toString(chars));
+            for (int i = 0; i < riddleInput.length; i++) {
+                seatChanged = seatChanged || Arrays.compare(riddleInput[i], newInput[i]) != 0;
             }
 
-
- */
             riddleInput = newInput;
-        //    loop++;
-         //   break;
         } while (seatChanged);
 
         System.out.println("seats stabilized - start counting the seats");
@@ -111,55 +95,110 @@ public class SeatingChaosResolver {
                 if (aChar == occupiedSeat) seatCounter++;
             }
         }
-        System.out.println("counting finished! Result = "+seatCounter);
-
+        System.out.println("counting finished! Result = " + seatCounter);
     }
 
-    public static int countAdjacentOccupations(int line, int column, char[][] floorPlan) {
-        int valueToReturn = 0;
+    private static void solveRiddleOne(char[][] riddleInput) {
+        boolean seatChanged;
+        do {
+            seatChanged = false;
+            char[][] newInput = new char[riddleInput.length][riddleInput[1].length];
 
-        //Check if something is on top, if line =1 than there is a row above
-        if(line>0){
-            char top = floorPlan[line - 1][column];
-            if(top == occupiedSeat) valueToReturn++;
+            for (int i = 0; i < riddleInput.length; i++) {
+                for (int j = 0; j < riddleInput[i].length; j++) {
+                    char currentSeat = riddleInput[i][j];
+                    int adjacentOccupied = countAdjacentOccupationsRiddle1(i, j, riddleInput, riddleInput.length, riddleInput[1].length);
 
-            //check if there is space left on the left
-            if(0<(column-1)){
-                char topLeft = floorPlan[line - 1][column - 1];
-                if(topLeft==occupiedSeat) valueToReturn++;
-            }
-            if(column<floorPlan[line].length-1){
-                char topRight = floorPlan[line - 1][column + 1];
-                if(topRight == occupiedSeat) valueToReturn++;
-            }
-        }
-        //check the bottom
-        if((line)<floorPlan.length-1){
-            char bottom = floorPlan[line + 1][column];
-            if(bottom == occupiedSeat) valueToReturn++;
-            //check if there is space left on the left
-            if(0<(column-1)){
-                char bottomLeft = floorPlan[line + 1][column - 1];
-                if(bottomLeft == occupiedSeat) valueToReturn++;
+                    if (currentSeat == emptySeat && adjacentOccupied == 0) {
+                        newInput[i][j] = occupiedSeat;
+                    } else if (currentSeat == occupiedSeat && adjacentOccupied >= 4) {
+                        newInput[i][j] = emptySeat;
+                    } else {
+                        newInput[i][j] = riddleInput[i][j];
+                    }
+                }
+
             }
 
-            if(column<floorPlan[line].length-1){
-                char bottomRight = floorPlan[line + 1][column + 1];
-                if(bottomRight == occupiedSeat) valueToReturn++;
+            for (int i = 0; i < riddleInput.length; i++) {
+                seatChanged = seatChanged || Arrays.compare(riddleInput[i], newInput[i]) != 0;
             }
-        }/*else{
-           // System.out.println("reached Bottom " + line+ "  "+floorPlan.length);
-        }*/
-        //left
-        if(0<(column-1)){
-            char left = floorPlan[line][column - 1];
-            if(left == occupiedSeat) valueToReturn++;
+
+            riddleInput = newInput;
+
+        } while (seatChanged);
+
+        System.out.println("seats stabilized - start counting the seats");
+
+        int seatCounter = 0;
+        for (char[] chars : riddleInput) {
+            for (char aChar : chars) {
+                if (aChar == occupiedSeat) seatCounter++;
+            }
         }
-        //right
-        if((column)<floorPlan[line].length-1){
-            char right = floorPlan[line][column + 1];
-            if(right == occupiedSeat) valueToReturn++;
+        System.out.println("counting finished! Result = " + seatCounter);
+    }
+
+    private static int occupied(int x, int y, char[][] floorPlan, int lineCount, int columnCount) {
+        if (x >= 0 && x < lineCount && y >= 0 && y < columnCount) {
+            if (floorPlan[x][y] == occupiedSeat) {
+                return 1;
+            }
         }
-        return valueToReturn;
+        return 0;
+    }
+
+    private static int countAdjacentOccupationsRiddle1(int line, int column, char[][] floorPlan, int lineCount, int columnCount) {
+        return
+                occupied(line - 1, column - 1, floorPlan, lineCount, columnCount) +
+                        occupied(line - 1, column, floorPlan, lineCount, columnCount) +
+                        occupied(line - 1, column + 1, floorPlan, lineCount, columnCount) +
+                        occupied(line, column - 1, floorPlan, lineCount, columnCount) +
+                        occupied(line, column + 1, floorPlan, lineCount, columnCount) +
+                        occupied(line + 1, column - 1, floorPlan, lineCount, columnCount) +
+                        occupied(line + 1, column, floorPlan, lineCount, columnCount) +
+                        occupied(line + 1, column + 1, floorPlan, lineCount, columnCount)
+                ;
+    }
+
+    private static boolean hasActualFieldToCheck(int x, int y, int lineCount, int columnCount){
+        return (x >= 0 && x < lineCount && y >= 0 && y < columnCount);
+    }
+
+    private static boolean isSeat(int x, int y, char[][] floorPlan, int lineCount, int columnCount) {
+        if (x >= 0 && x < lineCount && y >= 0 && y < columnCount) {
+            return floorPlan[x][y] == occupiedSeat || floorPlan[x][y] == emptySeat;
+        }
+        return false;
+    }
+
+
+
+    private static int lookUpForNextVisibleSeat(int x, int y,char[][] floorPlan,int lineCount, int columnCount,int adjustX, int adjustY){
+
+        if(hasActualFieldToCheck(x,y,lineCount,columnCount)){
+            if(isSeat(x,y,floorPlan,lineCount,columnCount)){
+                return occupied(x,y,floorPlan,lineCount,columnCount);
+            }else{
+                x = x+adjustX;
+                y = y+adjustY;
+                return lookUpForNextVisibleSeat(x,y,floorPlan,lineCount,columnCount,adjustX,adjustY);
+            }
+        }
+        return 0;
+    }
+
+    private static int countAdjacentOccupationsRiddle2(int line, int column, char[][] floorPlan, int lineCount, int columnCount) {
+
+        return
+                lookUpForNextVisibleSeat(line - 1, column - 1, floorPlan, lineCount, columnCount,-1,-1) +
+                        lookUpForNextVisibleSeat(line - 1, column, floorPlan, lineCount, columnCount,-1,0) +
+                        lookUpForNextVisibleSeat(line - 1, column + 1, floorPlan, lineCount, columnCount,-1,1) +
+                        lookUpForNextVisibleSeat(line, column - 1, floorPlan, lineCount, columnCount,0,-1) +
+                        lookUpForNextVisibleSeat(line, column + 1, floorPlan, lineCount, columnCount,0,1) +
+                        lookUpForNextVisibleSeat(line + 1, column - 1, floorPlan, lineCount, columnCount,1,-1) +
+                        lookUpForNextVisibleSeat(line + 1, column, floorPlan, lineCount, columnCount,1,0) +
+                        lookUpForNextVisibleSeat(line + 1, column + 1, floorPlan, lineCount, columnCount,1,1)
+                ;
     }
 }
