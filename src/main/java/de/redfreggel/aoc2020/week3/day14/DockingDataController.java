@@ -17,6 +17,11 @@ public class DockingDataController {
 
     public static void main(String[] args) {
         Path path = Paths.get(".\\src\\main\\resources\\aoc2020\\inputDay14_2020.txt");
+        solvePart1(path);
+
+    }
+
+    private static void solvePart1(Path path) {
         String text;
 
         String mask = null;
