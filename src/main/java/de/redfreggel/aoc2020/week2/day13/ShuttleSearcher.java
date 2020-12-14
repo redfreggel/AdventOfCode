@@ -35,13 +35,14 @@ public class ShuttleSearcher {
     }
 
     private static void solveRiddle2(List<String> input) {
+        long timestart = System.currentTimeMillis();
         String[] busServiceTimes = input.get(1).split(delimiterRiddle2);
         //bus , timeDiff
         LinkedList<Bus> busSequenceToFind = new LinkedList<>();
         for (int i = 0; i < busServiceTimes.length; i++) {
             if (empty.equals(busServiceTimes[i])) continue;
             if (minute.equals(busServiceTimes[i])) continue;
-            ;
+
             long serviceTime = Long.parseLong(busServiceTimes[i]);
             Bus bus = new Bus(serviceTime, i);
             busSequenceToFind.add(bus);
@@ -54,12 +55,10 @@ public class ShuttleSearcher {
         long matchedTime = 0;
         int busCount = busSequenceToFind.size()-1;
         Bus initalBus = busSequenceToFind.get(busCount);
-        boolean matchFound = false;
+        boolean matchFound;
 
         do {
             time++;
-            boolean tempFound = false;
-
             while(time%initalBus.busNumber != 0){
                 time++;
             }
@@ -86,6 +85,7 @@ public class ShuttleSearcher {
 
         } while (!matchFound);
         System.out.println("match found at time " + matchedTime);
+        System.out.println("time elapsed = "+(System.currentTimeMillis()-timestart));
 
     }
 
@@ -98,9 +98,9 @@ public class ShuttleSearcher {
         String[] busServiceTimes = input.get(1).split(delimiter);
         //figure out the highest business numer
         long highestServiceTime = 1;
-        for (int i = 0; i < busServiceTimes.length; i++) {
-            if (empty.equals(busServiceTimes[i])) continue;
-            long serviceTime = Long.parseLong(busServiceTimes[i]);
+        for (String s : busServiceTimes) {
+            if (empty.equals(s)) continue;
+            long serviceTime = Long.parseLong(s);
             if (serviceTime > highestServiceTime) highestServiceTime = serviceTime;
         }
 
