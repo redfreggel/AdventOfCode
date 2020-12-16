@@ -4,10 +4,7 @@ import java.io.BufferedReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class TicketTranslationHelper {
 
@@ -20,7 +17,7 @@ public class TicketTranslationHelper {
 
     public static void main(String[] args) {
         Path path = Paths.get(".\\src\\main\\resources\\aoc2020\\inputDay16_2020.txt");
-        //      solvePart1(path);
+        solvePart1(path);
         solvePart2(path);
     }
 
@@ -67,17 +64,79 @@ public class TicketTranslationHelper {
         List<long[]> cleanedTickets = new ArrayList<>();
         for (long[] values : otherTickets) {
             boolean toKeepValues = fitsRowToARange(values, availableRanges);
-            if(toKeepValues) cleanedTickets.add(values);
+            if (toKeepValues) cleanedTickets.add(values);
         }
-        //Now input has been cleaned from wrong scans
-        //now figure out if the input matches on
-        System.out.println(cleanedTickets);
+
+
+        Map<Long, List<String>> possibleValuesForMatch = new HashMap<>();
+        for (int i = 0; i < myTicketNumbers.length; i++) {
+
+            //go through the available values
+            for (Range range : availableRanges) {
+                boolean eachNumberMatchesRange = true;
+                for (long[] keptValues : cleanedTickets) {
+                    eachNumberMatchesRange = eachNumberMatchesRange && range.fitNumberToRange(keptValues[i]);
+                    if (!eachNumberMatchesRange) break;
+                }
+                if (eachNumberMatchesRange) {
+                    if (range.fitNumberToRange(myTicketNumbers[i])) {
+                        //to check if the range alrady exists. There could be conflicts!
+                        if (possibleValuesForMatch.containsKey(myTicketNumbers[i])) {
+                            List<String> list = possibleValuesForMatch.get(myTicketNumbers[i]);
+                            list.add(range.rangeName);
+                        } else {
+                            List<String> list = new ArrayList<>();
+                            list.add(range.rangeName);
+                            possibleValuesForMatch.put(myTicketNumbers[i], list);
+                        }
+                    }
+                }
+            }
+        }
+   //     System.out.println(possibleValuesForMatch);
+        List<Long> handledValues = new ArrayList<>();
+        List<String> keyWordsToRemove = new ArrayList<>();
+        Map<String, Long> matchingValuesToRange = new HashMap<>();
+        boolean everythingSorted = false;
+        while (!everythingSorted) {
+            for (long number : possibleValuesForMatch.keySet()) {
+                List<String> possibleValues = possibleValuesForMatch.get(number);
+                if (possibleValues.size() == 1) {
+                    handledValues.add(number);
+                    keyWordsToRemove.add(possibleValues.get(0));
+                    matchingValuesToRange.put(possibleValues.get(0), number);
+                }
+            }
+            for (Long key : handledValues) {
+                possibleValuesForMatch.remove(key);
+            }
+            for (long number : possibleValuesForMatch.keySet()) {
+                for (String keyword : keyWordsToRemove) {
+                    List<String> possibleValues = possibleValuesForMatch.get(number);
+                    possibleValues.remove(keyword);
+                }
+            }
+            if (possibleValuesForMatch.size() == 0) {
+                everythingSorted = true;
+            }
+        }
+        //System.out.println(matchingValuesToRange);
+        long result = 1;
+        for (String keyword : matchingValuesToRange.keySet()) {
+            if (keyword.contains("departure")) {
+                result = result * matchingValuesToRange.get(keyword);
+            }
+        }
+
+        System.out.println("Result part 2: " + result);
+
+
     }
 
     public static boolean fitsRowToARange(long[] valueToHandle, Set<Range> ranges) {
         boolean matchFound = true;
 
-        for(long value: valueToHandle){
+        for (long value : valueToHandle) {
             boolean valueMatchedAnyRange = false;
             for (Range range : ranges) {
                 valueMatchedAnyRange = valueMatchedAnyRange || range.fitNumberToRange(value);
@@ -167,16 +226,6 @@ public class TicketTranslationHelper {
             this.start2 = pStart2;
             this.end2 = pEnd2;
         }
-
-   /*     public boolean fitNumberToRange(long[] pValues) {
-            boolean result = true;
-            for (long value : pValues) {
-                result = result && fitNumberToRange(value);
-            }
-            return result;
-        }
-
-    */
 
         public boolean fitNumberToRange(long pValue) {
             return (start1 <= pValue && end1 >= pValue) || (start2 <= pValue && end2 >= pValue);
