@@ -48,115 +48,83 @@ public class InfinityStones {
 
         int iterations = 6;
         for (int currentIteration = 0; currentIteration < iterations; currentIteration++) {
-            Map<Integer, char[][]> temporaryInput = new HashMap<>();
+
             //get minimumKey
             List<Integer> zPositions = new ArrayList<>(riddleInput1.keySet());
             Collections.sort(zPositions);
 
-            //initialize x and y
-            int xLength = riddleInput1.get(0).length;
-            int yLength = riddleInput1.get(0)[0].length;
+
 
 
             //preparing new input
-            int minimumKeyZ = zPositions.get(0)-1;
-            int maximumZ = zPositions.get(zPositions.size() - 1)+1;
-            int newXLength = xLength + 2;
-            int newYLength = yLength + 2;
-            for (int j = minimumKeyZ; j <= maximumZ; j++) {
-                temporaryInput.put(j, new char[newXLength][newYLength]);
-            }
+            List<Integer> newKeys = new ArrayList<>(riddleInput1.keySet());
+            int minimumKeyZ = zPositions.get(0) - 1;
+            int maximumZ = zPositions.get(zPositions.size() - 1) + 1;
+            newKeys.add(minimumKeyZ);
+            newKeys.add(maximumZ);
+            int newXLength = riddleInput1.get(0).length + 2;
+            int newYLength = riddleInput1.get(0)[0].length + 2;
+
 
             //now i need to go through each of the possibleOptions
-            List<Integer> keysToHandle = new ArrayList<>(temporaryInput.keySet());
-            Collections.sort(keysToHandle);
+            Collections.sort(newKeys);
 
-            for (Integer z : keysToHandle) {
-                char[][] temporaryInputPosZ = temporaryInput.get(z);
-                for (int i = 0; i < temporaryInputPosZ.length; i++) {
-                    for (int j = 0; j < temporaryInputPosZ[i].length; j++) {
+            Map<Integer, char[][]> temporaryInput = new HashMap<>();
+
+            for (Integer z : newKeys) {
+                char[][] temporaryInputPosZ = new char[newXLength][newYLength];//input which needs to be filled
+                for (int i = 0; i < newXLength; i++) { //row
+                    for (int j = 0; j < newXLength; j++) { //column
                         //this is the current position to handle
 
                         int sourroundingActives = 0;
 
-                        //starting with the row upfront
-                        if (riddleInput1.containsKey(z - 1)) {
-                            char[][] inputToCompareWith = riddleInput1.get(z - 1);
-                            //Kopiert
-                            char[][] virtualExpandedComparableInput = new char[temporaryInputPosZ.length][temporaryInputPosZ[i].length];
-                            for(int a = -1; a<newXLength-1; a++){
-                                for(int b = -1; b<newYLength-1;b++){
-                                    if(a<0 || b<0){
-                                        virtualExpandedComparableInput[a+1][b+1]= inactivePosition;
-                                    } else if(a>=inputToCompareWith.length || b>=inputToCompareWith[0].length){
-                                        virtualExpandedComparableInput[a+1][b+1]= inactivePosition;
-                                    }else{
-                                        virtualExpandedComparableInput[a+1][b+1] = inputToCompareWith[a][b];
-                                    }
-                                }
-                                sourroundingActives=countAllOccupationsRiddle1(i,j,virtualExpandedComparableInput,virtualExpandedComparableInput.length,virtualExpandedComparableInput[0].length);
-                            }
-                        }
-                        //next the current row
-                        if (riddleInput1.containsKey(z)) {
-                            char[][] inputToCompareWith = riddleInput1.get(z);
-                            //Kopiert
-                            char[][] virtualExpandedComparableInput = new char[temporaryInputPosZ.length][temporaryInputPosZ[i].length];
-                            for(int a = -1; a<newXLength-1; a++){
-                                for(int b = -1; b<newYLength-1;b++){
-                                    if(a<0 || b<0){
-                                        virtualExpandedComparableInput[a+1][b+1]= inactivePosition;
-                                    } else if(a>=inputToCompareWith.length || b>=inputToCompareWith[0].length){
-                                        virtualExpandedComparableInput[a+1][b+1]= inactivePosition;
-                                    }else{
-                                        virtualExpandedComparableInput[a+1][b+1] = inputToCompareWith[a][b];
+                        char[][] virtualExpandedComparableInput = new char[newXLength][newXLength];
+                        // char[][] inputToCompareWith = null;
+
+
+                        for (int positionChecker = -1; positionChecker < 2; positionChecker++) {
+                            //System.out.println("position Checker pos = "+positionChecker);
+                            //get the grid before, actual or after
+                            if (!riddleInput1.containsKey(z + positionChecker)) {
+                               continue;
+                            }else{
+                                //make a copy
+                                for (int a = -1; a < newXLength - 1; a++) {
+                                    for (int b = -1; b < newYLength - 1; b++) {
+                                        //  System.out.println(a+" "+b);
+                                        if (a == -1 || b == -1) {
+                                            virtualExpandedComparableInput[a + 1][b + 1] = inactivePosition;
+                                            //  System.out.println(a+" "+b +" "+inactivePosition);
+                                        } else if (a == newXLength - 2 || b == newYLength - 2) {
+                                            virtualExpandedComparableInput[a + 1][b + 1] = inactivePosition;
+                                        } else {
+                                            // char[][] temp = riddleInput1.get(z-postionChecker);
+                                            virtualExpandedComparableInput[a + 1][b + 1] = riddleInput1.get(z + positionChecker)[a][b];
+                                        }
                                     }
                                 }
                             }
-                            sourroundingActives=countAdjacentOccupationsRiddle1(i,j,virtualExpandedComparableInput,virtualExpandedComparableInput.length,virtualExpandedComparableInput[0].length);
+
+
+                            //Check the grid
+
+                            if (positionChecker == 0) { // if same position -> only count Adjecent
+                                sourroundingActives = sourroundingActives+ countAdjacentOccupationsRiddle1(i, j, virtualExpandedComparableInput, newXLength, newYLength);
+                            } else {
+                                sourroundingActives =  sourroundingActives+ countAllOccupationsRiddle1(i, j, virtualExpandedComparableInput, newXLength, newYLength);
+                            }
 
                         }
-                        //last the z position behind
-                        if (riddleInput1.containsKey(z + 1)) {
-                            char[][] inputToCompareWith = riddleInput1.get(z + 1);
-                            //Kopiert
-                            char[][] virtualExpandedComparableInput = new char[temporaryInputPosZ.length][temporaryInputPosZ[i].length];
-                            for(int a = -1; a<newXLength-1; a++){
-                                for(int b = -1; b<newYLength-1;b++){
-                                    if(a<0 || b<0){
-                                        virtualExpandedComparableInput[a+1][b+1]= inactivePosition;
-                                    } else if(a>=inputToCompareWith.length || b>=inputToCompareWith[0].length){
-                                        virtualExpandedComparableInput[a+1][b+1]= inactivePosition;
-                                    }else{
-                                        virtualExpandedComparableInput[a+1][b+1] = inputToCompareWith[a][b];
-                                    }
-                                }
-                            }
-                            sourroundingActives=countAllOccupationsRiddle1(i,j,virtualExpandedComparableInput,virtualExpandedComparableInput.length,virtualExpandedComparableInput[0].length);
-                        }
 
-                        System.out.println("Handle position of new input.. x=" + i + " j=" + j + " z=" + z+ " surrounding = "+sourroundingActives);
+                    //    System.out.println("Handle position of new input.. x=" + i + " j=" + j + " z=" + z + " surrounding = " + sourroundingActives);
                         boolean isCubeCurrentlyHandledActive = false;
-                        if (riddleInput1.containsKey(z)) {
-                            char[][] gridToCheckForActive = riddleInput1.get(z);
-                            //Kopiert
-                            char[][] virtualExpandedComparableInput = new char[temporaryInputPosZ.length][temporaryInputPosZ[i].length];
-                            for(int a = -1; a<newXLength-1; a++){
-                                for(int b = -1; b<newYLength-1;b++){
-                                    if(a<0 || b<0){
-                                        virtualExpandedComparableInput[a+1][b+1]= inactivePosition;
-                                    } else if(a>=gridToCheckForActive.length || b>=gridToCheckForActive[0].length){
-                                        virtualExpandedComparableInput[a+1][b+1]= inactivePosition;
-                                    }else{
-                                        virtualExpandedComparableInput[a+1][b+1] = gridToCheckForActive[a][b];
-                                    }
-                                }
-                            }
 
-                            if(virtualExpandedComparableInput[i][j] == activePosition){
+
+                        if (riddleInput1.containsKey(z)) {
+                            if (virtualExpandedComparableInput[i][j] == activePosition) {
                                 isCubeCurrentlyHandledActive = true;
                             }
-
                         }
 
                         //check if cube is active
@@ -167,13 +135,22 @@ public class InfinityStones {
                         } else {
                             temporaryInputPosZ[i][j] = inactivePosition;
                         }
+
                     }
+
+
+                    //  if(currentIteration== 1)break;
                 }
+                temporaryInput.put(z, temporaryInputPosZ);
+
 
             }
+
+
             riddleInput1 = temporaryInput;
             //      System.out.println(riddleInput1);
-            System.out.println("---------------------");
+            System.out.println("-----ENDE interation " + currentIteration + "----------------");
+
             List<Integer> keys = new ArrayList<>(riddleInput1.keySet());
             Collections.sort(keys);
             for (Integer key : keys) {
@@ -182,9 +159,19 @@ public class InfinityStones {
                     System.out.println(Arrays.toString(row));
                 }
             }
-            //if(currentIteration== 0) break;
-
+           // if (currentIteration == 2) break;
         }
+        //now go through riddleInput and count #
+        int counter = 0;
+        for(Integer key : riddleInput1.keySet()){
+            char[][] values = riddleInput1.get(key);
+            for(int i= 0; i<values.length;i++){
+                for(int j=0;j<values[i].length;j++){
+                    if(activePosition == values[i][j]) counter++;
+                }
+            }
+        }
+        System.out.println("Riddle 1 counter = "+counter);
     }
 
     private static int countAdjacentOccupationsRiddle1(int line, int column, char[][] floorPlan, int lineCount, int columnCount) {
@@ -207,7 +194,7 @@ public class InfinityStones {
                         occupied(line, column + 1, floorPlan, lineCount, columnCount) +
                         occupied(line + 1, column - 1, floorPlan, lineCount, columnCount) +
                         occupied(line + 1, column, floorPlan, lineCount, columnCount) +
-                        occupied(line + 1, column + 1, floorPlan, lineCount, columnCount)+
+                        occupied(line + 1, column + 1, floorPlan, lineCount, columnCount) +
                         occupied(line, column, floorPlan, lineCount, columnCount);
     }
 
