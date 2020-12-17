@@ -165,9 +165,9 @@ public class InfinityStones {
         int counter = 0;
         for(Integer key : riddleInput1.keySet()){
             char[][] values = riddleInput1.get(key);
-            for(int i= 0; i<values.length;i++){
-                for(int j=0;j<values[i].length;j++){
-                    if(activePosition == values[i][j]) counter++;
+            for (char[] value : values) {
+                for (char c : value) {
+                    if (activePosition == c) counter++;
                 }
             }
         }
