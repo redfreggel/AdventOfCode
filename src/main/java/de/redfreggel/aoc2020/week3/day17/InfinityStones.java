@@ -128,14 +128,13 @@ public class InfinityStones {
                         }
 
                         //check if cube is active
-                        if ((sourroundingActives == 2 || sourroundingActives == 3) && isCubeCurrentlyHandledActive) {
+                        if (sourroundingActives == 3 && !isCubeCurrentlyHandledActive) {
                             temporaryInputPosZ[i][j] = activePosition;
-                        } else if (sourroundingActives == 3 && !isCubeCurrentlyHandledActive) {
+                        } else if ((sourroundingActives == 2 || sourroundingActives == 3) && isCubeCurrentlyHandledActive) {
                             temporaryInputPosZ[i][j] = activePosition;
                         } else {
                             temporaryInputPosZ[i][j] = inactivePosition;
                         }
-
                     }
 
 
