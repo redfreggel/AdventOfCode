@@ -53,9 +53,6 @@ public class InfinityStones {
             List<Integer> zPositions = new ArrayList<>(riddleInput1.keySet());
             Collections.sort(zPositions);
 
-
-
-
             //preparing new input
             List<Integer> newKeys = new ArrayList<>(riddleInput1.keySet());
             int minimumKeyZ = zPositions.get(0) - 1;
@@ -137,8 +134,6 @@ public class InfinityStones {
                         }
                     }
 
-
-                    //  if(currentIteration== 1)break;
                 }
                 temporaryInput.put(z, temporaryInputPosZ);
 
@@ -197,10 +192,6 @@ public class InfinityStones {
                         occupied(line, column, floorPlan, lineCount, columnCount);
     }
 
-  /*  private static boolean hasActualFieldToCheck(int x, int y, int lineCount, int columnCount) {
-        return (x >= 0 && x < lineCount && y >= 0 && y < columnCount);
-    }
-*/
     
     private static int occupied(int x, int y, char[][] grid, int lineCount, int columnCount) {
         if (x >= 0 && x < lineCount && y >= 0 && y < columnCount) {
