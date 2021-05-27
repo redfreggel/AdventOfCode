@@ -197,10 +197,11 @@ public class InfinityStones {
                         occupied(line, column, floorPlan, lineCount, columnCount);
     }
 
-    private static boolean hasActualFieldToCheck(int x, int y, int lineCount, int columnCount) {
+  /*  private static boolean hasActualFieldToCheck(int x, int y, int lineCount, int columnCount) {
         return (x >= 0 && x < lineCount && y >= 0 && y < columnCount);
     }
-
+*/
+    
     private static int occupied(int x, int y, char[][] grid, int lineCount, int columnCount) {
         if (x >= 0 && x < lineCount && y >= 0 && y < columnCount) {
             if (grid[x][y] == activePosition) {
